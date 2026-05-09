@@ -1,0 +1,55 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.1</TargetFramework>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<LangVersion>latest</LangVersion>
+		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+		<Nullable>enable</Nullable>
+
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="BepInEx.Core" Version="5.4.21" />
+		<PackageReference Include="LethalCompany.GameLibs.Steam" Publicize="true" Version="81.0.5-ngd.0" PrivateAssets="all" />
+		<PackageReference Include="UnityEngine.Modules" Version="2022.3.62" IncludeAssets="compile" PrivateAssets="all" />
+
+	</ItemGroup>
+	<ItemGroup>
+		<Reference Include="ModelReplacementAPI">
+			<HintPath>lib\ModelReplacementAPI.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Remove="lib\**" />
+		<Content Remove="lib\**" />
+		<EmbeddedResource Remove="lib\**" />
+		<None Remove="lib\**" />
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Remove="Output\**" />
+		<Content Remove="Output\**" />
+		<EmbeddedResource Remove="Output\**" />
+		<None Remove="Output\**" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Update="NuGet.config">
+			<Visible>false</Visible>
+		</None>
+	</ItemGroup>
+
+	<Target Name="ClearReferenceCopyLocalPaths" AfterTargets="ResolveAssemblyReferences">
+		<ItemGroup>
+			<ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" />
+		</ItemGroup>
+	</Target>
+
+	<Target Name="CopyToOutput" AfterTargets="Build">
+		<PropertyGroup>
+			<OutputDir>$(MSBuildProjectDirectory)\Output</OutputDir>
+		</PropertyGroup>
+		<MakeDir Directories="$(OutputDir)" Condition="!Exists('$(OutputDir)')" />
+		<Copy SourceFiles="$(TargetPath)" DestinationFolder="$(OutputDir)" SkipUnchangedFiles="true" />
+	</Target>
+
+</Project>
